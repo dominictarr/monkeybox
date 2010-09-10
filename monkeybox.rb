@@ -44,12 +44,14 @@ class MonkeyBox
 			stdin.puts code
       	stdin.close
       	yaml = stdout.read.strip
-      	#puts "YAML: <#{yaml}>"
+      	puts "YAML: <#{yaml}>"
       	report = YAML::load(yaml) || {} #need to catch puts, because the test prints a message if the test fails.
  			output report[:output]
  			returned report[:returned]
  			error report[:error]
-			
+			puts "==================================="
+			puts error
+			puts "==================================="
  			err = stderr.read
 			raise(err) if (err != "" )
 
@@ -71,8 +73,9 @@ end
 				error = e
 			end
 		}
-		
-		puts ({:returned => returned,:output => output, :error => error, :error_trace => (error ? error.backtrace : nil) }.to_yaml)
+		r = {:returned => returned,:output => output}
+		r[:error] = {:class => error.class.name, :message => error.message, :backtrace => error.backtrace } if error
+		puts r.to_yaml
 		puts "end".to_yaml #there is a problem with returning null, stdout seems to drop the last new line, so need something acceptable after.
 	end
 

@@ -18,4 +18,14 @@ end
 task :push => [:package] do
   sh "gem push #{SPEC.name}-#{SPEC.version.version}.gem"
 end
+task :commit do
+  sh "git add -A"
+  sh "git commit -m '#{ENV['m'] || "update..."}'"
+end
+task :deploy => [:commit] do
+  sh "git push heroku master"
+end
 
+task :git => [:commit] do
+  sh "git push origin master"
+end

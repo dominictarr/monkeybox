@@ -43,7 +43,8 @@ class TestMonkeyBox < Test::Unit::TestCase
 		#puts sb.output
 		assert_equal "", sb.output
 		assert sb.error
-		assert sb.error.is_a?(Exception)
+		assert_equal "RuntimeError", sb.error[:class] 
+		assert /an exception/ =~ sb.error[:message] 
 		
 	end
 
